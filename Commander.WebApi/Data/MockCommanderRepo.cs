@@ -5,7 +5,12 @@ namespace Commander.WebApi.Data
 {
     public class MockCommanderRepo : ICommanderRepo
     {
-        public IEnumerable<Command> GetAppCommands()
+        public bool SaveChanges()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<Command> GetAllCommands()
         {
             var cmds = new List<Command>
             {
@@ -19,6 +24,11 @@ namespace Commander.WebApi.Data
         public Command GetCommandById(int id)
         {
             return new Command { Id = 0, HowTo = "Boil an egg", Line = "Boil water", Platform = "Kettle & Pan" };
+        }
+
+        public void CreateCommand(Command cmd)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+using AutoMapper;
 using Commander.WebApi.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,10 +29,11 @@ namespace Commander.WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Commander", Version = "v1" });
             });
 
-            services.AddScoped<ICommanderRepo, MockCommanderRepo>();
+            services.AddScoped<ICommanderRepo, PostgresCommanderRepo>();
             // BKTODO User secrets for password etc.
             services.AddDbContext<CommanderContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("Commander")));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
