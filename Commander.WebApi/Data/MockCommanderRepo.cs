@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Commander.Models;
+using Commander.WebApi.Models;
 
 namespace Commander.WebApi.Data
 {
