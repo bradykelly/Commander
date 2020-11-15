@@ -7,6 +7,7 @@ using AutoMapper;
 using Commander.WebApi.Data;
 using Commander.WebApi.Dtos;
 using Commander.WebApi.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Commander.WebApi.Controllers
 {
@@ -51,6 +52,60 @@ namespace Commander.WebApi.Controllers
             var readDto = _mapper.Map<CommandReadDto>(createCmd);
 
             return CreatedAtRoute(nameof(GetCommandById), new {id = readDto.Id}, readDto);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateCommand(int id, CommandUpdateDto updateDto)
+        {
+            var destCommand = _repository.GetCommandById(id);
+            if (destCommand == null)
+            {
+                return NotFound();
+            }
+            _mapper.Map(updateDto, destCommand);
+
+            _repository.UpdateCommand(destCommand);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public ActionResult PartialCommandUpdate(int id, JsonPatchDocument<CommandUpdateDto> patchDoc)
+        {
+            var destCommand = _repository.GetCommandById(id);
+            if (destCommand == null)
+            {
+                return NotFound();
+            }
+
+            var patchDto = _mapper.Map<CommandUpdateDto>(destCommand);
+            patchDoc.ApplyTo(patchDto, ModelState);
+            if (!TryValidateModel(patchDto))
+            {
+                return ValidationProblem(ModelState);
+            }
+            _mapper.Map(patchDto, destCommand);
+
+            _repository.UpdateCommand(destCommand);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteCommand(int id)
+        {
+            var destCommand = _repository.GetCommandById(id);
+            if (destCommand == null)
+            {
+                return NotFound();
+            }
+
+            _repository.DeleteCommand(destCommand);
+            _repository.SaveChanges();
+
+            return NoContent();
         }
     }
 }

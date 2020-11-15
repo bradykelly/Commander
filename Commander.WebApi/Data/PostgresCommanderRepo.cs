@@ -38,5 +38,20 @@ namespace Commander.WebApi.Data
 
             _context.Commands.Add(cmd);
         }
+
+        public void UpdateCommand(Command cmd)
+        {
+            // NOTHING
+        }
+
+        public void DeleteCommand(Command cmd)
+        {
+            if (cmd == null)
+            {
+                throw new ArgumentNullException(nameof(cmd));
+            }
+
+            _context.Commands.Remove(cmd);
+        }
     }
 }
